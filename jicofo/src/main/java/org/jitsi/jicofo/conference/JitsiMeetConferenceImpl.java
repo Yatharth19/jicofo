@@ -47,6 +47,8 @@ import org.jivesoftware.smackx.caps.*;
 import org.jivesoftware.smackx.caps.packet.*;
 import org.jxmpp.jid.*;
 
+import com.fasterxml.jackson.annotation.JsonFormat.Features;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -470,7 +472,10 @@ public class JitsiMeetConferenceImpl
         String conferenceId = getMeetingId(); // OR getRoomName().toString();
         String roomName = getRoomName().toString();
         String url = "https://api-stage.lybl.com/gateway/booking/meeting-completed?" + conferenceId;
+        logger.info("Calling url = " );
+        logger.info(url);
         callService(url, conferenceId, roomName);
+        logger.info("Afer returning back");
         if (listener != null)
         {
             listener.conferenceEnded(this);
@@ -482,6 +487,8 @@ public class JitsiMeetConferenceImpl
                 "    \"conferenceId\": \"" + conferenceId + "\",\n" +
                 "    \"roomName\": \"" + roomName + "\",\n" +
                 "}";
+        logger.info("Reqest body is - ");
+        logger.info(requestBody);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .header("CONFERENCE-ID", conferenceId)
@@ -490,6 +497,8 @@ public class JitsiMeetConferenceImpl
         HttpResponse<String> response = null;
         try {
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+            logger.info("response is - ");
+            logger.info(response);
         } catch (Exception e) {
             e.printStackTrace();
         }
